@@ -49,10 +49,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="GanpatiDrive", group="Showcase")
+@TeleOp(name = "ShowcaseDrive", group = "Showcase")
 @Config
-public class GanpatiDrive extends OpMode
-{
+public class ShowcaseDrive extends OpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotorEx LF = null;
@@ -66,6 +65,8 @@ public class GanpatiDrive extends OpMode
     private Servo bottom = null;
 
     public static double speedOffset = 0.2;
+    public static double wristFinal = 0.2;
+    public static double wristBegin = 0;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -149,13 +150,13 @@ public class GanpatiDrive extends OpMode
         }
 
 
-        /*if (gamepad1.dpad_right && !gamepad1.dpad_left) {
-            wrist.setPosition(0.2);
+        if (gamepad1.dpad_right && !gamepad1.dpad_left) {
+            wrist.setPosition(wristFinal);
         }
 
         if (gamepad1.dpad_left && !gamepad1.dpad_right) {
-            wrist.setPosition(0);
-        }*/
+            wrist.setPosition(wristBegin);
+        }
 
         // Move the arm up
         if (gamepad1.dpad_up && !gamepad1.dpad_down) {
