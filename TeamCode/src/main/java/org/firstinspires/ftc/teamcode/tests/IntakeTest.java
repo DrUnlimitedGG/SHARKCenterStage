@@ -48,9 +48,9 @@ import com.qualcomm.robotcore.hardware.Gamepad;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="DrivetrainTesting", group="Tests")
+@TeleOp(name="IntakeTest", group="Tests")
 @Config
-public class DrivetrainTesting extends OpMode
+public class IntakeTest extends OpMode
 {
     // Declare OpMode members.
     private DcMotorEx motor;
