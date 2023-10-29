@@ -27,14 +27,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.showcase;
+package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -50,9 +49,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name = "AmanLouisaRUNTHISPROGRAMForScouts", group = "Showcase")
+@TeleOp(name = "MecanumDrive")
 @Config
-public class ShowcaseDrive extends OpMode {
+public class MecanumDrive extends OpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotorEx LF = null;
@@ -60,11 +59,8 @@ public class ShowcaseDrive extends OpMode {
     private DcMotorEx RF = null;
     private DcMotorEx RB = null;
     private DcMotorEx intake = null;
-    public static double drivetrainSpeed = 0.7;
-    public static double intakeSpeed = 0.7;
-
-    private boolean intakeRunningForwards = true;
-    private boolean intakeRunningBackwards = true;
+    public static double drivetrainSpeed = 0.2;
+    public static double intakeSpeed = 1;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -94,7 +90,6 @@ public class ShowcaseDrive extends OpMode {
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
-
     }
 
     /*
@@ -118,11 +113,10 @@ public class ShowcaseDrive extends OpMode {
     @Override
     public void loop() {
         double y = -gamepad1.left_stick_y;
-        double x = gamepad1.left_stick_x * 1;
+        double x = gamepad1.left_stick_x * 1.1;
         double rx = gamepad1.right_stick_x;
 
-        //double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double denominator = 1;
+        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
         double frontLeftPower = (y + x + rx) / denominator;
         double backLeftPower = (y - x + rx) / denominator;
         double frontRightPower = (y - x - rx) / denominator;
@@ -133,45 +127,17 @@ public class ShowcaseDrive extends OpMode {
         RF.setPower(frontRightPower * drivetrainSpeed);
         RB.setPower(backRightPower * drivetrainSpeed);
 
-        if (gamepad1.y && !gamepad1.b && !gamepad1.a) {
+        if (gamepad1.y && !gamepad1.x) {
             intake.setPower(Math.abs(intakeSpeed));
-            intakeRunningForwards = true;
-            intakeRunningBackwards = false;
         }
 
-        if (gamepad1.a && !gamepad1.y && !gamepad1.b) {
+        if (gamepad1.x && !gamepad1.y) {
             intake.setPower(-intakeSpeed);
-            intakeRunningForwards = false;
-            intakeRunningBackwards = true;
         }
 
-        if (gamepad1.b && !gamepad1.a && !gamepad1.y) {
-            intake.setPower(0);
-            intakeRunningForwards = false;
-            intakeRunningBackwards = false;
-        }
-
-        if (gamepad1.dpad_up) {
-            intakeSpeed = Math.min(intakeSpeed + 0.01, 1);
-            if (intakeRunningForwards && !intakeRunningBackwards) {
-                intake.setPower(intakeSpeed);
-            } else if (intakeRunningBackwards && !intakeRunningForwards) {
-                intake.setPower(-intakeSpeed);
-            }
-        }
-
-        if (gamepad1.dpad_down) {
-            intakeSpeed = Math.max(0, intakeSpeed - 0.01);
-            if (intakeRunningForwards && !intakeRunningBackwards) {
-                intake.setPower(intakeSpeed);
-            } else if (intakeRunningBackwards && !intakeRunningForwards) {
-                intake.setPower(-intakeSpeed);
-            }
-        }
-
-        telemetry.addData("Runtime", runtime.toString());
-        telemetry.addData("Intake Speed", String.valueOf(intakeSpeed));
-        telemetry.addData("Drivetrain Speed", String.valueOf(drivetrainSpeed));
+        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        telemetry.addData("Intake Speed", "Intake Speed" + String.valueOf(intakeSpeed));
+        telemetry.addData("Drivetrain Speed", "Drivetrain Speed Multiplier: " + String.valueOf(drivetrainSpeed));
         telemetry.update();
     }
 

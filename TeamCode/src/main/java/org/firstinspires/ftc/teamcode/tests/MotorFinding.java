@@ -48,16 +48,14 @@ import com.qualcomm.robotcore.hardware.Gamepad;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="DrivetrainTest", group="Tests")
+@TeleOp(name="MotorFinding", group="Tests")
 @Config
-public class DrivetrainTest extends OpMode
+public class MotorFinding extends OpMode
 {
     // Declare OpMode members.
     private DcMotorEx motor;
 
     public static double SPEED = 0.5;
-
-    Gamepad previousGamepad1;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -68,8 +66,6 @@ public class DrivetrainTest extends OpMode
 
         motor = hardwareMap.get(DcMotorEx.class, "testMotor");
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        previousGamepad1 = new Gamepad();
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -82,19 +78,8 @@ public class DrivetrainTest extends OpMode
     @Override
     public void loop() {
 
-        if ((gamepad1.x && !previousGamepad1.x) || (gamepad1.b && !previousGamepad1.b)) {
-            motor.setPower(0);
-        }
+        motor.setPower(-gamepad1.left_stick_y);
 
-        if (gamepad1.y && !previousGamepad1.y) {
-            motor.setPower(Math.abs(SPEED));
-        }
-
-        if (gamepad1.a && !previousGamepad1.a) {
-            motor.setPower(Math.abs(SPEED)*-1);
-        }
-
-        previousGamepad1.copy(gamepad1);
         telemetry.addData("Speed: ", SPEED);
         telemetry.update();
     }

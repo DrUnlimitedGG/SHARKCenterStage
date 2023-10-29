@@ -55,9 +55,8 @@ public class IntakeTest extends OpMode
     // Declare OpMode members.
     private DcMotorEx motor;
 
-    public static double SPEED = 0.5;
+    public static double SPEED = 1;
 
-    Gamepad previousGamepad1;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -66,10 +65,8 @@ public class IntakeTest extends OpMode
     public void init() {
         telemetry.addData("Status", "Initialized");
 
-        motor = hardwareMap.get(DcMotorEx.class, "testMotor");
+        motor = hardwareMap.get(DcMotorEx.class, "intake");
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        previousGamepad1 = new Gamepad();
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -82,19 +79,14 @@ public class IntakeTest extends OpMode
     @Override
     public void loop() {
 
-        if ((gamepad1.x && !previousGamepad1.x) || (gamepad1.b && !previousGamepad1.b)) {
-            motor.setPower(0);
-        }
-
-        if (gamepad1.y && !previousGamepad1.y) {
+        if (gamepad1.y && !gamepad1.x) {
             motor.setPower(Math.abs(SPEED));
         }
 
-        if (gamepad1.a && !previousGamepad1.a) {
+        if (gamepad1.x && !gamepad1.y) {
             motor.setPower(Math.abs(SPEED)*-1);
         }
 
-        previousGamepad1.copy(gamepad1);
         telemetry.addData("Speed: ", SPEED);
         telemetry.update();
     }
