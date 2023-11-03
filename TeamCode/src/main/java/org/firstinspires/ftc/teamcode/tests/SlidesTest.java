@@ -13,7 +13,6 @@ public class SlidesTest extends OpMode
 {
     private DcMotorEx LeftSlide = null;
     private DcMotorEx RightSlide = null;
-
     public static double GoUpSpeed = 0.9;
     public static double GoDownSpeed = 0.55;
     public static int targetPosition = 0;
@@ -26,7 +25,8 @@ public class SlidesTest extends OpMode
         LeftSlide = hardwareMap.get(DcMotorEx.class, "leftslide");
         RightSlide = hardwareMap.get(DcMotorEx.class, "rightslide");
 
-        RightSlide.setDirection(DcMotorEx.Direction.REVERSE);
+        RightSlide.setDirection(DcMotorEx.Direction.FORWARD);
+        LeftSlide.setDirection(DcMotorEx.Direction.REVERSE);
 
 
     }
@@ -63,7 +63,7 @@ public class SlidesTest extends OpMode
             targetPosition = targetPosition + 5;
 
             LeftSlide.setTargetPosition(targetPosition);
-            RightSlide.setTargetPosition(targetPosition - 10);
+            RightSlide.setTargetPosition(targetPosition);
 
             LeftSlide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             RightSlide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
