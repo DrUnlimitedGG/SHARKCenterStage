@@ -16,6 +16,7 @@ public class SlidesTest extends OpMode
     public static double GoUpSpeed = 0.9;
     public static double GoDownSpeed = 0.55;
     public static int targetPosition = 0;
+    public static int heightDiff = 20;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -60,7 +61,7 @@ public class SlidesTest extends OpMode
     @Override
     public void loop() {
         if (gamepad2.x) {
-            targetPosition = targetPosition + 5;
+            targetPosition = targetPosition + heightDiff;
 
             LeftSlide.setTargetPosition(targetPosition);
             RightSlide.setTargetPosition(targetPosition);
@@ -74,10 +75,10 @@ public class SlidesTest extends OpMode
         }
 
         if (gamepad2.y) {
-            if ((targetPosition - 10) < 0) {
+            if ((targetPosition - heightDiff) < 0) {
                 targetPosition = 0;
             } else {
-                targetPosition = targetPosition - 10;
+                targetPosition = targetPosition - heightDiff;
             }
 
             LeftSlide.setTargetPosition(targetPosition);
