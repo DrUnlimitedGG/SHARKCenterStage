@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name = "AmanLouisaRUNTHISPROGRAMForScouts", group = "Showcase")
+@TeleOp(name = "ShowcaseDrive", group = "Showcase")
 @Config
 public class ShowcaseDrive extends OpMode {
     // Declare OpMode members.
@@ -169,9 +169,6 @@ public class ShowcaseDrive extends OpMode {
             }
         }
 
-        telemetry.addData("Runtime", runtime.toString());
-        telemetry.addData("Intake Speed", String.valueOf(intakeSpeed));
-        telemetry.addData("Drivetrain Speed", String.valueOf(drivetrainSpeed));
         telemetry.update();
     }
 

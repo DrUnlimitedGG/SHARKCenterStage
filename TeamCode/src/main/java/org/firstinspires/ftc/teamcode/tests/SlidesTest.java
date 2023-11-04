@@ -92,8 +92,6 @@ public class SlidesTest extends OpMode
 
         }
 
-
-
         telemetry.addData("Target Position: ", targetPosition);
         telemetry.update();
 

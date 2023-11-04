@@ -59,8 +59,19 @@ public class MecanumDrive extends OpMode {
     private DcMotorEx RF = null;
     private DcMotorEx RB = null;
     private DcMotorEx intake = null;
-    public static double drivetrainSpeed = 0.2;
-    public static double intakeSpeed = 1;
+    private DcMotorEx LeftSlide = null;
+    private DcMotorEx RightSlide = null;
+
+    public static double drivetrainSpeed = 0.7;
+    public static double intakeSpeed = 0.8;
+    public static int targetPosition = 0;
+    public static int heightDiff = 20;
+    public static int heightLimit = 820;
+    public static double GoUpSpeed = 0.9;
+    public static double GoDownSpeed = 0.55;
+    private boolean intakeRunningForwards = true;
+    private boolean intakeRunningBackwards = true;
+
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -78,15 +89,15 @@ public class MecanumDrive extends OpMode {
         RB = hardwareMap.get(DcMotorEx.class, "right_back");
 
         intake = hardwareMap.get(DcMotorEx.class, "intake");
+        LeftSlide = hardwareMap.get(DcMotorEx.class, "leftslide");
+        RightSlide = hardwareMap.get(DcMotorEx.class, "rightslide");
 
-        // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
-        // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
-        // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         LF.setDirection(DcMotor.Direction.REVERSE);
         LB.setDirection(DcMotor.Direction.REVERSE);
         RF.setDirection(DcMotor.Direction.FORWARD);
         RB.setDirection(DcMotor.Direction.FORWARD);
-
+        RightSlide.setDirection(DcMotorEx.Direction.FORWARD);
+        LeftSlide.setDirection(DcMotorEx.Direction.REVERSE);
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -105,6 +116,16 @@ public class MecanumDrive extends OpMode {
     @Override
     public void start() {
         runtime.reset();
+
+        LeftSlide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        RightSlide.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+
+        LeftSlide.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        RightSlide.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
+        LeftSlide.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        RightSlide.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+
     }
 
     /*
@@ -127,17 +148,56 @@ public class MecanumDrive extends OpMode {
         RF.setPower(frontRightPower * drivetrainSpeed);
         RB.setPower(backRightPower * drivetrainSpeed);
 
-        if (gamepad1.y && !gamepad1.x) {
+        if (gamepad2.y && !gamepad2.a) {
+            slidesUp();
+        }
+
+        if (gamepad2.a && !gamepad2.y) {
+            slidesDown();
+        }
+
+        if (gamepad2.b && !gamepad2.x) {
             intake.setPower(Math.abs(intakeSpeed));
+            intakeRunningForwards = true;
+            intakeRunningBackwards = false;
         }
 
-        if (gamepad1.x && !gamepad1.y) {
+        if (gamepad2.x && !gamepad2.b) {
             intake.setPower(-intakeSpeed);
+            intakeRunningForwards = false;
+            intakeRunningBackwards = true;
         }
 
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Intake Speed", "Intake Speed" + String.valueOf(intakeSpeed));
-        telemetry.addData("Drivetrain Speed", "Drivetrain Speed Multiplier: " + String.valueOf(drivetrainSpeed));
+        if (gamepad2.left_bumper && gamepad2.right_bumper) {
+            intake.setPower(0);
+            intakeRunningForwards = false;
+            intakeRunningBackwards = false;
+        }
+
+        if (gamepad2.dpad_up && !gamepad2.dpad_down) {
+            intakeSpeed = Math.min(intakeSpeed + 0.01, 1);
+            if (intakeRunningForwards && !intakeRunningBackwards) {
+                intake.setPower(intakeSpeed);
+            } else if (intakeRunningBackwards && !intakeRunningForwards) {
+                intake.setPower(-intakeSpeed);
+            }
+        }
+
+        if (gamepad2.dpad_down && !gamepad2.dpad_up) {
+            intakeSpeed = Math.max(0, intakeSpeed - 0.01);
+            if (intakeRunningForwards && !intakeRunningBackwards) {
+                intake.setPower(intakeSpeed);
+            } else if (intakeRunningBackwards && !intakeRunningForwards) {
+                intake.setPower(-intakeSpeed);
+            }
+        }
+
+        telemetry.addData("Runtime", runtime.toString());
+        telemetry.addData("Intake Speed", String.valueOf(intakeSpeed));
+        telemetry.addData("Drivetrain Speed", String.valueOf(drivetrainSpeed));
+        telemetry.addData("Slides Position", String.valueOf(targetPosition));
+        telemetry.addData("Slides Extend Speed", String.valueOf(GoUpSpeed));
+        telemetry.addData("Slides Retract Speed", String.valueOf(GoDownSpeed));
         telemetry.update();
     }
 
@@ -146,6 +206,32 @@ public class MecanumDrive extends OpMode {
      */
     @Override
     public void stop() {
+    }
+
+    public void slidesUp() {
+        targetPosition = Math.min(targetPosition + heightDiff, heightLimit);
+
+        LeftSlide.setTargetPosition(targetPosition);
+        RightSlide.setTargetPosition(targetPosition);
+
+        LeftSlide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        RightSlide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+
+        LeftSlide.setPower(GoUpSpeed);
+        RightSlide.setPower(GoUpSpeed);
+    }
+
+    public void slidesDown() {
+        targetPosition = Math.max(0, targetPosition - heightDiff);
+
+        LeftSlide.setTargetPosition(targetPosition);
+        RightSlide.setTargetPosition(targetPosition);
+
+        LeftSlide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        RightSlide.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+
+        LeftSlide.setPower(GoDownSpeed);
+        RightSlide.setPower(GoDownSpeed);
     }
 
 }
