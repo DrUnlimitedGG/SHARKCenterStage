@@ -61,6 +61,7 @@ public class MecanumDrive extends OpMode {
     private DcMotorEx intake = null;
     private DcMotorEx LeftSlide = null;
     private DcMotorEx RightSlide = null;
+    private Servo liftin = null;
 
     public static double drivetrainSpeed = 0.7;
     public static double intakeSpeed = 0.8;
@@ -69,6 +70,8 @@ public class MecanumDrive extends OpMode {
     public static int heightLimit = 820;
     public static double GoUpSpeed = 0.9;
     public static double GoDownSpeed = 0.55;
+    public static double upPos = 1;
+    public static double downPos = 0.6;
     private boolean intakeRunningForwards = true;
     private boolean intakeRunningBackwards = true;
 
@@ -88,6 +91,7 @@ public class MecanumDrive extends OpMode {
         RF = hardwareMap.get(DcMotorEx.class, "right_front");
         RB = hardwareMap.get(DcMotorEx.class, "right_back");
 
+        liftin = hardwareMap.get(Servo.class, "liftin");
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         LeftSlide = hardwareMap.get(DcMotorEx.class, "leftslide");
         RightSlide = hardwareMap.get(DcMotorEx.class, "rightslide");
@@ -98,6 +102,13 @@ public class MecanumDrive extends OpMode {
         RB.setDirection(DcMotor.Direction.FORWARD);
         RightSlide.setDirection(DcMotorEx.Direction.FORWARD);
         LeftSlide.setDirection(DcMotorEx.Direction.REVERSE);
+        liftin.setDirection(Servo.Direction.REVERSE);
+
+        LF.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        LB.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        RF.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        RB.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -192,10 +203,20 @@ public class MecanumDrive extends OpMode {
             }
         }
 
+        if (gamepad2.right_bumper && !gamepad2.left_bumper) {
+            liftin.setPosition(upPos);
+        }
+
+        if (gamepad2.left_bumper && !gamepad2.right_bumper) {
+            liftin.setPosition(downPos);
+        }
+
         telemetry.addData("Runtime", runtime.toString());
         telemetry.addData("Intake Speed", String.valueOf(intakeSpeed));
         telemetry.addData("Drivetrain Speed", String.valueOf(drivetrainSpeed));
         telemetry.addData("Slides Position", String.valueOf(targetPosition));
+        telemetry.addData("Slides Limit", String.valueOf(heightLimit));
+        telemetry.addData("Slides Step", String.valueOf(heightDiff));
         telemetry.addData("Slides Extend Speed", String.valueOf(GoUpSpeed));
         telemetry.addData("Slides Retract Speed", String.valueOf(GoDownSpeed));
         telemetry.update();
