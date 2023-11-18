@@ -61,16 +61,24 @@ public class MecanumDrive extends OpMode {
     private DcMotorEx intake = null;
     private DcMotorEx LeftSlide = null;
     private DcMotorEx RightSlide = null;
+    private Servo liftin = null;
+    private Servo outtake = null;
 
     public static double drivetrainSpeed = 0.7;
-    public static double intakeSpeed = 0.8;
+    public static double intakeSpeed = 0.3;
     public static int targetPosition = 0;
     public static int heightDiff = 20;
     public static int heightLimit = 820;
     public static double GoUpSpeed = 0.9;
     public static double GoDownSpeed = 0.55;
+    public static double upPos = 1;
+    public static double downPos = 0.67;
     private boolean intakeRunningForwards = true;
     private boolean intakeRunningBackwards = true;
+    public static double outtakeOpen = 0.4;
+    public static double outtakeClose = 0;
+
+
 
 
     /*
@@ -88,9 +96,11 @@ public class MecanumDrive extends OpMode {
         RF = hardwareMap.get(DcMotorEx.class, "right_front");
         RB = hardwareMap.get(DcMotorEx.class, "right_back");
 
+        liftin = hardwareMap.get(Servo.class, "liftin");
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         LeftSlide = hardwareMap.get(DcMotorEx.class, "leftslide");
         RightSlide = hardwareMap.get(DcMotorEx.class, "rightslide");
+        outtake = hardwareMap.get(Servo.class, "outtake");
 
         LF.setDirection(DcMotor.Direction.REVERSE);
         LB.setDirection(DcMotor.Direction.REVERSE);
@@ -98,6 +108,13 @@ public class MecanumDrive extends OpMode {
         RB.setDirection(DcMotor.Direction.FORWARD);
         RightSlide.setDirection(DcMotorEx.Direction.FORWARD);
         LeftSlide.setDirection(DcMotorEx.Direction.REVERSE);
+        liftin.setDirection(Servo.Direction.REVERSE);
+
+        LF.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        LB.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        RF.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        RB.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -174,7 +191,7 @@ public class MecanumDrive extends OpMode {
             intakeRunningBackwards = false;
         }
 
-        if (gamepad2.dpad_up && !gamepad2.dpad_down) {
+        if ((-gamepad2.left_stick_y > 0.1) == true) {
             intakeSpeed = Math.min(intakeSpeed + 0.01, 1);
             if (intakeRunningForwards && !intakeRunningBackwards) {
                 intake.setPower(intakeSpeed);
@@ -183,7 +200,7 @@ public class MecanumDrive extends OpMode {
             }
         }
 
-        if (gamepad2.dpad_down && !gamepad2.dpad_up) {
+        if ((-gamepad2.left_stick_y < -0.1) == true) {
             intakeSpeed = Math.max(0, intakeSpeed - 0.01);
             if (intakeRunningForwards && !intakeRunningBackwards) {
                 intake.setPower(intakeSpeed);
@@ -192,10 +209,28 @@ public class MecanumDrive extends OpMode {
             }
         }
 
+        if (gamepad2.right_bumper && !gamepad2.left_bumper) {
+            liftin.setPosition(upPos);
+        }
+
+        if (gamepad2.left_bumper && !gamepad2.right_bumper) {
+            liftin.setPosition(downPos);
+        }
+
+        if (gamepad2.dpad_right) {
+            outtake.setPosition(outtakeOpen);
+        }
+
+        if (gamepad2.dpad_left) {
+            outtake.setPosition(outtakeClose);
+        }
+
         telemetry.addData("Runtime", runtime.toString());
         telemetry.addData("Intake Speed", String.valueOf(intakeSpeed));
         telemetry.addData("Drivetrain Speed", String.valueOf(drivetrainSpeed));
         telemetry.addData("Slides Position", String.valueOf(targetPosition));
+        telemetry.addData("Slides Limit", String.valueOf(heightLimit));
+        telemetry.addData("Slides Step", String.valueOf(heightDiff));
         telemetry.addData("Slides Extend Speed", String.valueOf(GoUpSpeed));
         telemetry.addData("Slides Retract Speed", String.valueOf(GoDownSpeed));
         telemetry.update();
