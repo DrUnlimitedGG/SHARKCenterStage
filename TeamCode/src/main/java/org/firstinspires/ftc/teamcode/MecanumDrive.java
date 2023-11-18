@@ -72,11 +72,12 @@ public class MecanumDrive extends OpMode {
     public static double GoUpSpeed = 0.9;
     public static double GoDownSpeed = 0.55;
     public static double upPos = 1;
-    public static double downPos = 0.67;
+    public static double downPos = 0.71;
     private boolean intakeRunningForwards = true;
     private boolean intakeRunningBackwards = true;
     public static double outtakeOpen = 0.4;
     public static double outtakeClose = 0;
+
 
 
 
@@ -154,6 +155,8 @@ public class MecanumDrive extends OpMode {
         double x = gamepad1.left_stick_x * 1.1;
         double rx = gamepad1.right_stick_x;
 
+        boolean isOuttakeOpen = false;
+
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
         double frontLeftPower = (y + x + rx) / denominator;
         double backLeftPower = (y - x + rx) / denominator;
@@ -218,11 +221,11 @@ public class MecanumDrive extends OpMode {
         }
 
         if (gamepad2.dpad_right) {
-            outtake.setPosition(outtakeOpen);
+            outtake.setPosition(outtakeClose);
         }
 
         if (gamepad2.dpad_left) {
-            outtake.setPosition(outtakeClose);
+            outtake.setPosition(outtakeOpen);
         }
 
         telemetry.addData("Runtime", runtime.toString());
