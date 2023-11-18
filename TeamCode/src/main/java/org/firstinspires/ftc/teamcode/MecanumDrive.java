@@ -63,6 +63,7 @@ public class MecanumDrive extends OpMode {
     private DcMotorEx RightSlide = null;
     private Servo liftin = null;
     private Servo outtake = null;
+    private Servo drone = null;
 
     public static double drivetrainSpeed = 0.7;
     public static double intakeSpeed = 0.3;
@@ -77,10 +78,8 @@ public class MecanumDrive extends OpMode {
     private boolean intakeRunningBackwards = true;
     public static double outtakeOpen = 0.4;
     public static double outtakeClose = 0;
-
-
-
-
+    public static double droneShooterPos = 1;
+    public static double droneBeginPos = 0;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -102,6 +101,7 @@ public class MecanumDrive extends OpMode {
         LeftSlide = hardwareMap.get(DcMotorEx.class, "leftslide");
         RightSlide = hardwareMap.get(DcMotorEx.class, "rightslide");
         outtake = hardwareMap.get(Servo.class, "outtake");
+        drone = hardwareMap.get(Servo.class, "drone");
 
         LF.setDirection(DcMotor.Direction.REVERSE);
         LB.setDirection(DcMotor.Direction.REVERSE);
@@ -226,6 +226,10 @@ public class MecanumDrive extends OpMode {
 
         if (gamepad2.dpad_left) {
             outtake.setPosition(outtakeOpen);
+        }
+
+        if (gamepad1.dpad_up && gamepad1.right_bumper && gamepad1.left_bumper) {
+            drone.setPosition(droneShooterPos);
         }
 
         telemetry.addData("Runtime", runtime.toString());
