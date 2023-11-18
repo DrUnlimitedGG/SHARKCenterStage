@@ -185,7 +185,7 @@ public class MecanumDrive extends OpMode {
             intakeRunningBackwards = true;
         }
 
-        if (gamepad2.left_bumper && gamepad2.right_bumper) {
+        if (gamepad2.dpad_down) {
             intake.setPower(0);
             intakeRunningForwards = false;
             intakeRunningBackwards = false;

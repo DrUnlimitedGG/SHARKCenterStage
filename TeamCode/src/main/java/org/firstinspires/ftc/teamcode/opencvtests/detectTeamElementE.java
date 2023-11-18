@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.opencvtests.blueTeamElementDetector;
 import org.firstinspires.ftc.teamcode.opencvtests.RedTeamElementDetector;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -25,6 +26,8 @@ public class detectTeamElementE extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, webcamName), cameraMonitorViewId);
+
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         if(isRed)
         {
@@ -75,6 +78,39 @@ public class detectTeamElementE extends LinearOpMode {
         }
         waitForStart();
 
+        // put the code here
+        // if it's red, do if (isRed)
+        // then inside do if RedTeamElementDetector.getPosition() == integer
+
+        if (opModeIsActive()) {
+            if (isRed) {
+                if (RedTeamElementDetector.getPosition() == 1) {
+
+                }
+
+                if (RedTeamElementDetector.getPosition() == 2) {
+
+                }
+
+                if (RedTeamElementDetector.getPosition() == 3) {
+
+                }
+            }
+
+            if (isRed == false) {
+                if (blueTeamElementDetector.getPosition() == 1) {
+
+                }
+
+                if (blueTeamElementDetector.getPosition() == 2) {
+
+                }
+
+                if (blueTeamElementDetector.getPosition() == 3) {
+
+                }
+            }
+        }
 
     }
 }

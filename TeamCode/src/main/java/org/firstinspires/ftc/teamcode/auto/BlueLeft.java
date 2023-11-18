@@ -14,7 +14,7 @@ public class BlueLeft extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        Pose2d startPose = new Pose2d(25, 60, Math.toRadians(-90));
+        Pose2d startPose = new Pose2d(12, 60, Math.toRadians(-90));
 
         drive.setPoseEstimate(startPose);
 
