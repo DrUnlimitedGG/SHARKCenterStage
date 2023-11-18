@@ -97,22 +97,22 @@ public class detectTeamElementE extends LinearOpMode {
 
 
             // put the code here
-        // if it's red, do if (isRed)
-        // then inside do if RedTeamElementDetector.getPosition() == integer
-        if(isRed)
-        {
-           position = RedTeamElementDetector.getPosition();
-        }
-        else
-        {
-            position = blueTeamElementDetector.getPosition();
-        }
+            // if it's red, do if (isRed)
+            // then inside do if RedTeamElementDetector.getPosition() == integer
+            if(isRed)
+            {
+                position = RedTeamElementDetector.getPosition();
+            }
+            else
+            {
+                position = blueTeamElementDetector.getPosition();
+            }
 
         TrajectorySequence forward = drive.trajectorySequenceBuilder(new Pose2d(0, 0, Math.toRadians(0)))
                 .lineToConstantHeading(new Vector2d(25, 0))
                 .build();
         TrajectorySequence rightAdjust = drive.trajectorySequenceBuilder(new Pose2d(25,0,0))
-        .lineToConstantHeading(new Vector2d(25, 10))
+                .lineToConstantHeading(new Vector2d(25, 10))
                 .turn(Math.toRadians(90))
                 .build();
         TrajectorySequence leftAdjust = drive.trajectorySequenceBuilder(new Pose2d(25,0,0))
@@ -121,19 +121,19 @@ public class detectTeamElementE extends LinearOpMode {
                 .build();
         drive.followTrajectorySequence(forward);
 
-                if (position == 1) {
+        if (position == 1) {
 
-                    drive.followTrajectorySequence(leftAdjust);
+            drive.followTrajectorySequence(leftAdjust);
 
-                }
+        }
 
-                if (position == 3) {
-                    drive.followTrajectorySequence(rightAdjust);
+        if (position == 3) {
+            drive.followTrajectorySequence(rightAdjust);
 
-                }
-                intake.setPower(-0.3);
-                Thread.sleep(1000);
-                intake.setPower(0);
+        }
+        intake.setPower(-0.3);
+        Thread.sleep(1000);
+        intake.setPower(0);
 
 
 
