@@ -67,10 +67,10 @@ public class MecanumDrive extends OpMode {
     public static double drivetrainSpeed = 0.7;
     public static double intakeSpeed = 0.3;
     public static int targetPosition = 0;
-    public static int heightDiff = 20;
+    public static int heightDiff = 5;
     public static int heightLimit = 820;
-    public static double GoUpSpeed = 0.9;
-    public static double GoDownSpeed = 0.55;
+    public static double GoUpSpeed = 0.2;
+    public static double GoDownSpeed = 0.2;
     public static double upPos = 1;
     public static double downPos = 0.71;
     private boolean intakeRunningForwards = true;
