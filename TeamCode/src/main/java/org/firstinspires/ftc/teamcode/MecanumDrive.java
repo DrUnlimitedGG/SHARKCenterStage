@@ -78,8 +78,8 @@ public class MecanumDrive extends OpMode {
     private boolean intakeRunningBackwards = true;
     public static double outtakeOpen = 0.4;
     public static double outtakeClose = 0;
-    public static double droneShooterPos = 1;
-    public static double droneBeginPos = 0;
+    public static double droneShooterPos = 0.6;
+    public static double droneBeginPos = 0.3;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -144,6 +144,7 @@ public class MecanumDrive extends OpMode {
         LeftSlide.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         RightSlide.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
 
+        drone.setPosition(droneBeginPos);
     }
 
     /*
