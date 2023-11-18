@@ -60,10 +60,15 @@ public class TrackWidthTuner extends LinearOpMode {
 
             drive.turnAsync(Math.toRadians(ANGLE));
 
+
             while (!isStopRequested() && drive.isBusy()) {
                 double heading = drive.getPoseEstimate().getHeading();
                 headingAccumulator += Angle.normDelta(heading - lastHeading);
                 lastHeading = heading;
+                telemetry.addData("Heading", heading);
+                telemetry.addData("Power", drive.getWheelVelocities());
+                telemetry.addData("Stuff", drive.getLocalizer().getPoseEstimate());
+                telemetry.update();
 
                 drive.update();
             }
