@@ -49,7 +49,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name = "MecanumDrive")
+@TeleOp(name = "MecanumDrive", group="TeleOp")
 @Config
 public class MecanumDrive extends OpMode {
     // Declare OpMode members.
